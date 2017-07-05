@@ -1,6 +1,7 @@
 package com.ntatma.tatua;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,7 +20,7 @@ import java.io.IOException;
 
 
 public class SplashActivity  extends AppCompatActivity
-        implements FragmentSplash.FragmentSplashListener, FragmentVerify.FragmentVerifyListener, FragmentVerifyCode.FragmentVerifyCodeListener {
+        implements FragmentVerify.FragmentVerifyListener, FragmentVerifyCode.FragmentVerifyCodeListener, FragmentUserDetails.FragmentUserDetailsListener {
 
     public static String TAG = "SplashActivity";
     Context mContext;
@@ -37,7 +38,9 @@ public class SplashActivity  extends AppCompatActivity
 
         mContext = getApplicationContext();
         utils = new Utils(mContext);
+        setContentView(R.layout.activity_splash);
         if (utils.getFromPreferences(Utils.IS_NUM_VERIFIED) == ""){
+
             Log.d(TAG, "Creating nexmo client");
             try {
                 nexmoClient = new NexmoClient.NexmoClientBuilder()
@@ -56,24 +59,19 @@ public class SplashActivity  extends AppCompatActivity
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                     .addToBackStack(FragmentVerify.TAG)
                     .commit();
-//            setContentView(R.layout.activity_splash);
-//            Log.d(TAG, "After setting content view, Now setting Fragment splash.");
-//            Fragment fragmentSplash = new FragmentSplash();
-//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//            fragmentTransaction.add(R.id.content_frame, fragmentSplash, FragmentSplash.TAG);
-//            fragmentTransaction.addToBackStack(FragmentSplash.TAG);
-//            fragmentTransaction.commit();
+        }else if (utils.getFromPreferences(Utils.IS_USER_REGISTRED) == ""){
+            Fragment userDetailsFragment = new FragmentUserDetails();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, userDetailsFragment, FragmentUserDetails.TAG)
+                    .commit();
+        }else {
+            lauchApp();
         }
     }
 
     @Override
-    public void putVerifyView() {
-
-
-    }
-
-    @Override
     public void onBtnVerifyClicked(String number) {
+        getSupportFragmentManager().popBackStack();
         //show progrees bar
         Log.d(TAG, "Initialize Verify Client");
         verifyClient = new VerifyClient(nexmoClient);
@@ -81,9 +79,7 @@ public class SplashActivity  extends AppCompatActivity
             @Override
             public void onVerifyInProgress(VerifyClient verifyClient, UserObject user) {
                 Log.d(TAG, "onVerifyInProgress for number: " + user.getPhoneNumber());
-
-                Log.d(TAG, "pop back stack");
-                getSupportFragmentManager().popBackStack();
+                //hide progress bar
                 Fragment verifyCodeFragment = new FragmentVerifyCode();
                 Log.d(TAG, "Launching fragment");
                 getSupportFragmentManager().beginTransaction()
@@ -96,6 +92,7 @@ public class SplashActivity  extends AppCompatActivity
                 Log.d(TAG, "onUserVerified for number: " + user.getPhoneNumber());
                 utils.savePreferences(Utils.USER_NUMBER, user.getPhoneNumber());
                 Log.d(TAG, "SplashActivity#putUserDetailsView().. starting UserDetails fragment");
+                //hide progress
                 Fragment userDetailsFragment = new FragmentUserDetails();
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.content_frame, userDetailsFragment, FragmentUserDetails.TAG)
@@ -118,16 +115,22 @@ public class SplashActivity  extends AppCompatActivity
     }
 
     @Override
-    public void putUserDetailsView() {
-        Log.d(TAG, "SplashActivity#putUserDetailsView().. starting UserDetails fragment");
-        Fragment userDetailsFragment = new FragmentUserDetails();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.content_frame, userDetailsFragment, FragmentUserDetails.TAG)
-                .commit();
+    public void onBtnSendCodeClick(String code) {
+        getSupportFragmentManager().popBackStack();
+        //show progress bar
+        verifyClient.checkPinCode(code);
     }
 
     @Override
-    public void onBtnSendCodeClick(String code) {
-        verifyClient.checkPinCode(code);
+    public void onBtnRegisterClicked() {
+        getSupportFragmentManager().popBackStack();
+        //send details to server
+        lauchApp();
+    }
+
+    private void lauchApp(){
+        Intent mainActivityIntent = new Intent(this, MainActivity.class);
+        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(mainActivityIntent);
     }
 }

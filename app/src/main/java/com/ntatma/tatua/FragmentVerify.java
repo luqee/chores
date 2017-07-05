@@ -1,4 +1,4 @@
-package com.tech.blue.flame;
+package com.ntatma.tatua;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -21,9 +21,6 @@ import com.nexmo.sdk.verify.event.VerifyError;
 
 import java.io.IOException;
 
-/**
- * Created by luqi on 2/11/17.
- */
 
 public class FragmentVerify extends Fragment {
 

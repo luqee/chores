@@ -1,4 +1,4 @@
-package com.tech.blue.flame;
+package com.ntatma.tatua;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,10 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-
-/**
- * Created by luqi on 3/17/17.
- */
 
 public class FragmentVerifyCode extends Fragment {
 

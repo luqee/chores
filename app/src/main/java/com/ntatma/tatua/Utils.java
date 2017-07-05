@@ -19,14 +19,14 @@ public class Utils {
 
     public static final String IS_USER_REGISTRED = "IsUserRegistered";
     public static final String IS_NUM_VERIFIED = "IsNumberVerified";
-    public static final String USER_NAME = "UserName";
+    public static final String LOGED_IN_AS = "LogedInAs";
     public static final String USER_NAME = "UserName";
     public static final String USER_NUMBER = "UserNumber";
 
 
 
-    public static final String NexmoAppId = "fc5156e1-1d9e-4809-ab16-61b3c65b514b";
-    public static final String NexmoSharedSecretKey = "a7ce445d9b803c3";
+    public static final String NexmoAppId = "300e8d3c-d27a-47b6-8016-6870a0d79efc";
+    public static final String NexmoSharedSecretKey = "dba21cce6cc2223";
 
     public static final String PROPERTY_TOKEN_ID = "token_id";
     public static final String PROPERTY_REG_ID = "registration_id";

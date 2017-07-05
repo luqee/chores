@@ -1,26 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/img_profilePic"
-        android:layout_width="wrap_content"
-        android:layout_height="18dp"/>
-
     <EditText
-        android:id="@+id/txt_username"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Name"
-        android:layout_gravity="center" />
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:id="@+id/edit_username" />
 
     <Button
-        android:id="@+id/btn_continue"
+        android:text="@string/register_button_text"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:text="Continue"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.13" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/edit_username"
+        android:layout_marginStart="46dp"
+        android:layout_marginBottom="108dp"
+        android:id="@+id/btn_register" />
 
-</LinearLayout>
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_register"
+        android:layout_alignStart="@+id/btn_register"
+        android:layout_marginBottom="25dp"
+        android:id="@+id/radio_options">
+
+        <RadioButton
+            android:text="@string/radio_client"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radio_client"
+            android:layout_weight="1"
+            android:onClick="onRadioButtonClicked" />
+
+        <RadioButton
+            android:text="@string/radio_provider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radio_provider"
+            android:layout_weight="1"
+            android:onClick="onRadioButtonClicked" />
+    </RadioGroup>
+
+    <TextView
+        android:text="@string/label_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/radio_options"
+        android:layout_alignStart="@+id/radio_options"
+        android:layout_marginBottom="30dp"
+        android:id="@+id/text_option" />
+
+</RelativeLayout>

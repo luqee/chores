@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Tatua</string>
+    <string name="register_button_text">Register</string>
+    <string name="label_options">Register to application as?</string>
+    <string name="radio_client">Client</string>
+    <string name="radio_provider">Service Provider</string>
+    <string name="verifyText">A Verification code will be sent to your phone..</string>
 </resources>
