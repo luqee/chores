@@ -2,6 +2,7 @@ package com.ntatma.tatua;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,7 +17,14 @@ import com.nexmo.sdk.verify.event.UserObject;
 import com.nexmo.sdk.verify.event.VerifyClientListener;
 import com.nexmo.sdk.verify.event.VerifyError;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SplashActivity  extends AppCompatActivity
@@ -125,11 +133,47 @@ public class SplashActivity  extends AppCompatActivity
     public void onBtnRegisterClicked() {
         getSupportFragmentManager().popBackStack();
         //send details to server
+        registerWithServer();
         lauchApp();
     }
 
+    public void registerWithServer(){
+
+        new AsyncTask<Void, Void, JSONObject>(){
+
+            @Override
+            protected JSONObject doInBackground(Void... params) {
+                List<NameValuePair> nameValuePairs;
+                JSONParser parser = new JSONParser();
+                nameValuePairs = new ArrayList<NameValuePair>();
+                nameValuePairs.add(new BasicNameValuePair("name", utils.getFromPreferences(Utils.USER_NAME)));
+                nameValuePairs.add(new BasicNameValuePair("number", utils.getFromPreferences(Utils.USER_NUMBER)));
+                nameValuePairs.add(new BasicNameValuePair("registered_as", utils.getFromPreferences(Utils.PROPERTY_TOKEN_ID)));
+                JSONObject jsonObject = parser.getJSONFromUrl(utils.getCurrentIPAddress() +"/v1/register.php",nameValuePairs);
+                return jsonObject;
+            }
+
+            @Override
+            protected void onPostExecute(JSONObject jsonObject) {
+                try {
+                    String response = jsonObject.getString("result");
+
+                    if (response.equals("Sucess")){
+                        lauchApp();
+//                        Intent mainActivityIntent = new Intent(mContext, MainActivity.class);
+//                        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        startActivity(mainActivityIntent);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.execute(null, null, null);
+    }
+
     private void lauchApp(){
-        Intent mainActivityIntent = new Intent(this, MainActivity.class);
+        Intent mainActivityIntent = new Intent(mContext, MainActivity.class);
         mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(mainActivityIntent);
     }

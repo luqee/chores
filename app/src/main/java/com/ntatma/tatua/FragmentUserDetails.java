@@ -61,7 +61,7 @@ public class FragmentUserDetails extends Fragment {
         Log.d(TAG, "In onCreateView method");
         super.onCreateView(inflater, container, savedInstanceState);
         final View root = inflater.inflate(R.layout.fragment_userdetails, container, false);
-        txtUserName = (EditText)root.findViewById(R.id.txt_username);
+        txtUserName = (EditText)root.findViewById(R.id.edit_username);
         radioOptionGroup = (RadioGroup) root.findViewById(R.id.radio_options) ;
         btnRegister = (Button)root.findViewById(R.id.btn_register);
         btnRegister.setOnClickListener(new View.OnClickListener() {
