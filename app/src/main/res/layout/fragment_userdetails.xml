@@ -8,7 +8,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Name"
         android:ems="10"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -31,23 +30,22 @@
         android:layout_above="@+id/btn_register"
         android:layout_alignStart="@+id/btn_register"
         android:layout_marginBottom="25dp"
-        android:id="@+id/radio_options">
+        android:id="@+id/radio_options"
+        android:checkedButton="@+id/radio_client">
 
         <RadioButton
             android:text="@string/radio_client"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio_client"
-            android:layout_weight="1"
-            android:onClick="onRadioButtonClicked" />
+            android:layout_weight="1" />
 
         <RadioButton
             android:text="@string/radio_provider"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radio_provider"
-            android:layout_weight="1"
-            android:onClick="onRadioButtonClicked" />
+            android:layout_weight="1" />
     </RadioGroup>
 
     <TextView

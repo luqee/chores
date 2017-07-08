@@ -3,17 +3,15 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:text="No Categories yet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/progress_splash"
-        android:visibility="gone" />
-
-    <FrameLayout
-        android:id="@+id/content_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
+        android:id="@android:id/empty" />
 
 </LinearLayout>

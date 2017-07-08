@@ -21,7 +21,7 @@ public class FragmentUserDetails extends Fragment {
     FragmentUserDetailsListener fragmentUserDetailsListener;
 
     public interface FragmentUserDetailsListener{
-        void onBtnRegisterClicked();
+        void onBtnRegisterClicked(String username);
     }
 
     Utils mUtils;
@@ -31,7 +31,8 @@ public class FragmentUserDetails extends Fragment {
     EditText txtUserName;
     Button btnRegister;
     RadioGroup radioOptionGroup;
-    RadioButton radioOptionsButton;
+    RadioButton client, provider;
+
 
     @Override
     public void onAttach(Context context) {
@@ -62,17 +63,30 @@ public class FragmentUserDetails extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         final View root = inflater.inflate(R.layout.fragment_userdetails, container, false);
         txtUserName = (EditText)root.findViewById(R.id.edit_username);
+        //radio group
         radioOptionGroup = (RadioGroup) root.findViewById(R.id.radio_options) ;
+        radioOptionGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.radio_provider){
+                    mUtils.savePreferences(Utils.LOGED_IN_AS, "provider");
+                    btnRegister.setVisibility(View.VISIBLE);
+                }else if (checkedId == R.id.radio_client){
+                    mUtils.savePreferences(Utils.LOGED_IN_AS, "client");
+                    btnRegister.setVisibility(View.VISIBLE);
+                }else {
+                    mUtils.savePreferences(Utils.LOGED_IN_AS, "");
+                    btnRegister.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
         btnRegister = (Button)root.findViewById(R.id.btn_register);
+        Log.d(TAG, "In onCreateView method >> setting up button listener");
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // get selected radio button from radioGroup
-                int selectedId = radioOptionGroup.getCheckedRadioButtonId();
-                // find the radiobutton by returned id
-                radioOptionsButton = (RadioButton) root.findViewById(selectedId);
-                mUtils.savePreferences(Utils.LOGED_IN_AS, radioOptionsButton.getText().toString());
-                fragmentUserDetailsListener.onBtnRegisterClicked();
+                Log.d(TAG, "Button Register Clicked");
+                fragmentUserDetailsListener.onBtnRegisterClicked(txtUserName.getText().toString());
             }
         });
 

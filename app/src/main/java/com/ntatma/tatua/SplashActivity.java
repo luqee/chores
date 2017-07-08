@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.nexmo.sdk.NexmoClient;
 import com.nexmo.sdk.core.client.ClientBuilderException;
@@ -36,6 +38,7 @@ public class SplashActivity  extends AppCompatActivity
 
     private NexmoClient nexmoClient;
     private VerifyClient verifyClient;
+    private ProgressBar progressBarSplash;
 
 
     @Override
@@ -47,8 +50,10 @@ public class SplashActivity  extends AppCompatActivity
         mContext = getApplicationContext();
         utils = new Utils(mContext);
         setContentView(R.layout.activity_splash);
-        if (utils.getFromPreferences(Utils.IS_NUM_VERIFIED) == ""){
+        progressBarSplash =(ProgressBar) findViewById(R.id.progress_splash);
 
+        if (utils.getFromPreferences(Utils.IS_NUM_VERIFIED) == ""){
+            progressBarSplash.setVisibility(View.VISIBLE);
             Log.d(TAG, "Creating nexmo client");
             try {
                 nexmoClient = new NexmoClient.NexmoClientBuilder()
@@ -62,6 +67,7 @@ public class SplashActivity  extends AppCompatActivity
 
             Log.d(TAG, "SplashActivity#.putVerifyView().. starting verify fragment");
             Fragment fragmentVerify = new FragmentVerify();
+            progressBarSplash.setVisibility(View.INVISIBLE);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.content_frame ,fragmentVerify, FragmentVerify.TAG)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
@@ -81,6 +87,7 @@ public class SplashActivity  extends AppCompatActivity
     public void onBtnVerifyClicked(String number) {
         getSupportFragmentManager().popBackStack();
         //show progrees bar
+        progressBarSplash.setVisibility(View.VISIBLE);
         Log.d(TAG, "Initialize Verify Client");
         verifyClient = new VerifyClient(nexmoClient);
         verifyClient.addVerifyListener(new VerifyClientListener() {
@@ -88,6 +95,7 @@ public class SplashActivity  extends AppCompatActivity
             public void onVerifyInProgress(VerifyClient verifyClient, UserObject user) {
                 Log.d(TAG, "onVerifyInProgress for number: " + user.getPhoneNumber());
                 //hide progress bar
+                progressBarSplash.setVisibility(View.INVISIBLE);
                 Fragment verifyCodeFragment = new FragmentVerifyCode();
                 Log.d(TAG, "Launching fragment");
                 getSupportFragmentManager().beginTransaction()
@@ -98,9 +106,13 @@ public class SplashActivity  extends AppCompatActivity
             @Override
             public void onUserVerified(VerifyClient verifyClient, UserObject user) {
                 Log.d(TAG, "onUserVerified for number: " + user.getPhoneNumber());
-                utils.savePreferences(Utils.USER_NUMBER, user.getPhoneNumber());
-                Log.d(TAG, "SplashActivity#putUserDetailsView().. starting UserDetails fragment");
+                getSupportFragmentManager().popBackStack();
                 //hide progress
+                progressBarSplash.setVisibility(View.INVISIBLE);
+                utils.savePreferences(Utils.USER_NUMBER, user.getPhoneNumber());
+                utils.savePreferences(Utils.IS_NUM_VERIFIED, "True");
+                Log.d(TAG, "SplashActivity#putUserDetailsView().. starting UserDetails fragment");
+
                 Fragment userDetailsFragment = new FragmentUserDetails();
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.content_frame, userDetailsFragment, FragmentUserDetails.TAG)
@@ -126,15 +138,18 @@ public class SplashActivity  extends AppCompatActivity
     public void onBtnSendCodeClick(String code) {
         getSupportFragmentManager().popBackStack();
         //show progress bar
+        progressBarSplash.setVisibility(View.VISIBLE);
         verifyClient.checkPinCode(code);
     }
 
     @Override
-    public void onBtnRegisterClicked() {
+    public void onBtnRegisterClicked(String uname) {
+        Log.d(TAG, "Button Register Clicked");
+        utils.savePreferences(Utils.USER_NAME, uname);
         getSupportFragmentManager().popBackStack();
         //send details to server
+        progressBarSplash.setVisibility(View.VISIBLE);
         registerWithServer();
-        lauchApp();
     }
 
     public void registerWithServer(){
@@ -143,13 +158,14 @@ public class SplashActivity  extends AppCompatActivity
 
             @Override
             protected JSONObject doInBackground(Void... params) {
+                Log.d(TAG, "Starting registration");
                 List<NameValuePair> nameValuePairs;
                 JSONParser parser = new JSONParser();
                 nameValuePairs = new ArrayList<NameValuePair>();
                 nameValuePairs.add(new BasicNameValuePair("name", utils.getFromPreferences(Utils.USER_NAME)));
                 nameValuePairs.add(new BasicNameValuePair("number", utils.getFromPreferences(Utils.USER_NUMBER)));
-                nameValuePairs.add(new BasicNameValuePair("registered_as", utils.getFromPreferences(Utils.PROPERTY_TOKEN_ID)));
-                JSONObject jsonObject = parser.getJSONFromUrl(utils.getCurrentIPAddress() +"/v1/register.php",nameValuePairs);
+                nameValuePairs.add(new BasicNameValuePair("registered_as", utils.getFromPreferences(Utils.LOGED_IN_AS)));
+                JSONObject jsonObject = parser.getJSONFromUrl(utils.getCurrentIPAddress() +"tatua/api/v1.0/auth/register",nameValuePairs);
                 return jsonObject;
             }
 
@@ -158,12 +174,17 @@ public class SplashActivity  extends AppCompatActivity
                 try {
                     String response = jsonObject.getString("result");
 
-                    if (response.equals("Sucess")){
+                    if (response.equals("success")){
+                        Log.d(TAG, "Successfull registration");
+                        progressBarSplash.setVisibility(View.INVISIBLE);
+                        utils.savePreferences(Utils.IS_USER_REGISTRED, "True");
                         lauchApp();
 //                        Intent mainActivityIntent = new Intent(mContext, MainActivity.class);
 //                        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 //                        startActivity(mainActivityIntent);
 
+                    }else if (response.equals("error")){
+                        Log.d(TAG, "Error in registration");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
