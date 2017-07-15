@@ -25,6 +25,9 @@ import java.util.List;
  */
 
 public class JSONParser {
+
+    static  String TAG = "JSONParser";
+
     static InputStream inputStream = null;
     static JSONObject jsonObject = null;
     static JSONArray jsonArray = null;
@@ -42,10 +45,10 @@ public class JSONParser {
                 httpPost.setEntity(new UrlEncodedFormEntity(params));
             }
             HttpResponse response = client.execute(httpPost);
-            Log.d("Http Response:", response.toString());
+            Log.d("Http Response: \n\n\n\n", response.toString());
             HttpEntity entity = response.getEntity();
             inputStream = entity.getContent();
-
+            Log.d(TAG, "InputStream content");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (ClientProtocolException e) {
@@ -55,6 +58,7 @@ public class JSONParser {
         }
 
         try {
+            Log.d(TAG, "Creating bufferedReader");
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             StringBuilder stringBuilder = new StringBuilder();
             String line = null;

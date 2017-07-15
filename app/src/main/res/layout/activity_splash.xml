@@ -4,11 +4,12 @@
     android:layout_height="match_parent">
 
     <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
+        style="@android:style/Widget.Material.Light.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/progress_splash"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:indeterminate="true" />
 
     <FrameLayout
         android:id="@+id/content_frame"

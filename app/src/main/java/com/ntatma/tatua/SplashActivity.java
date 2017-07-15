@@ -165,6 +165,7 @@ public class SplashActivity  extends AppCompatActivity
                 nameValuePairs.add(new BasicNameValuePair("name", utils.getFromPreferences(Utils.USER_NAME)));
                 nameValuePairs.add(new BasicNameValuePair("number", utils.getFromPreferences(Utils.USER_NUMBER)));
                 nameValuePairs.add(new BasicNameValuePair("registered_as", utils.getFromPreferences(Utils.LOGED_IN_AS)));
+                Log.d(TAG, "create namevalue pairs");
                 JSONObject jsonObject = parser.getJSONFromUrl(utils.getCurrentIPAddress() +"tatua/api/v1.0/auth/register",nameValuePairs);
                 return jsonObject;
             }
@@ -194,6 +195,7 @@ public class SplashActivity  extends AppCompatActivity
     }
 
     private void lauchApp(){
+        Log.d(TAG, "Launching main activity");
         Intent mainActivityIntent = new Intent(mContext, MainActivity.class);
         mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(mainActivityIntent);
