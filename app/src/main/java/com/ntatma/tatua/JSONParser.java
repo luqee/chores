@@ -26,35 +26,40 @@ import java.util.List;
 
 public class JSONParser {
 
-    static  String TAG = "JSONParser";
+    private static  String TAG = "JSONParser";
 
-    static InputStream inputStream = null;
-    static JSONObject jsonObject = null;
-    static JSONArray jsonArray = null;
-    static String json = "";
+    private InputStream inputStream = null;
+    private JSONObject jsonObject = null;
+    private JSONArray jsonArray = null;
+    private String json = "";
 
     public JSONParser() {
     }
 
     public JSONObject getJSONFromUrl(String url,List<NameValuePair> params){
         // Making HTTP request
+        Log.d(TAG, "Inside JSONParser::getJSONFromUrl()");
         try {
             DefaultHttpClient client = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(url);
             if (params != null){
                 httpPost.setEntity(new UrlEncodedFormEntity(params));
+                Log.d(TAG, "Inside JSONParser::getJSONFromUrl() setting formparams");
             }
             HttpResponse response = client.execute(httpPost);
-            Log.d("Http Response: \n\n\n\n", response.toString());
+            Log.d(TAG, "Inside JSONParser::getJSONFromUrl() after executing htttp past");
             HttpEntity entity = response.getEntity();
             inputStream = entity.getContent();
             Log.d(TAG, "InputStream content");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+            Log.d(TAG, "UnsupportedEncodingException");
         } catch (ClientProtocolException e) {
             e.printStackTrace();
+            Log.d(TAG, "ClientProtocolException");
         } catch (IOException e) {
             e.printStackTrace();
+            Log.d(TAG, "IOException");
         }
 
         try {
@@ -85,7 +90,10 @@ public class JSONParser {
             // defaultHttpClient
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(url);
-            httpPost.setEntity(new UrlEncodedFormEntity(params));
+            if (params != null){
+                httpPost.setEntity(new UrlEncodedFormEntity(params));
+                Log.d(TAG, "Inside JSONParser::getJSONArray() setting formparams");
+            }
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity httpEntity = httpResponse.getEntity();
             inputStream = httpEntity.getContent();

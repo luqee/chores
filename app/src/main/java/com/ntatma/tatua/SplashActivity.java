@@ -180,9 +180,6 @@ public class SplashActivity  extends AppCompatActivity
                         progressBarSplash.setVisibility(View.INVISIBLE);
                         utils.savePreferences(Utils.IS_USER_REGISTRED, "True");
                         lauchApp();
-//                        Intent mainActivityIntent = new Intent(mContext, MainActivity.class);
-//                        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                        startActivity(mainActivityIntent);
 
                     }else if (response.equals("error")){
                         Log.d(TAG, "Error in registration");

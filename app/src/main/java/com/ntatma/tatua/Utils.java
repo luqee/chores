@@ -101,7 +101,7 @@ public class Utils {
     }
 
     public String getCurrentIPAddress() {
-        return "http://192.168.42.200:5000/";
+        return "http://10.42.0.1:5000/";
     }
 
     public void showToast(final String txt) {

@@ -34,43 +34,5 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.add(R.id.content_frame, fragmentCategories, FragmentCategories.TAG);
         fragmentTransaction.addToBackStack(FragmentCategories.TAG);
         fragmentTransaction.commit();
-        getCategories();
     }
-
-    public void getCategories(){
-
-        new AsyncTask<Void, Void, JSONArray>(){
-
-            @Override
-            protected JSONArray doInBackground(Void... params) {
-                Log.d(TAG, "Fetching Categories to display");
-                List<NameValuePair> nameValuePairs;
-                JSONParser parser = new JSONParser();
-                nameValuePairs = new ArrayList<NameValuePair>();
-                nameValuePairs.add(new BasicNameValuePair("name", utils.getFromPreferences(Utils.USER_NAME)));
-                nameValuePairs.add(new BasicNameValuePair("number", utils.getFromPreferences(Utils.USER_NUMBER)));
-                nameValuePairs.add(new BasicNameValuePair("registered_as", utils.getFromPreferences(Utils.LOGED_IN_AS)));
-                Log.d(TAG, "create namevalue pairs");
-                JSONArray jsonArray = parser.getJSONArray(utils.getCurrentIPAddress() +"tatua/api/v1.0/categories",nameValuePairs);
-                return jsonArray;
-            }
-
-            @Override
-            protected void onPostExecute(JSONArray jsonArray) {
-                try {
-                    String response = jsonArray.getString(Integer.parseInt("result"));
-
-                    if (response.equals("success")){
-                        Log.d(TAG, "Successfully fetched categiries");
-                        //update the categories fragment
-                    }else if (response.equals("error")){
-                        Log.d(TAG, "Error in registration");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.execute(null, null, null);
-    }
-
 }
