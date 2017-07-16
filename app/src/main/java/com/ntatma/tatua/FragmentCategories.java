@@ -88,6 +88,7 @@ public class FragmentCategories extends ListFragment implements AdapterView.OnIt
                     if (response.equals("success")){
                         Log.d(TAG, "Successfully fetched categiries");
                         //update the categories fragment
+
                     }else if (response.equals("error")){
                         Log.d(TAG, "Error in registration");
                     }
