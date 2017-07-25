@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Log.d(TAG, "After setting content view and GoogleApiClient, Now setting Fragment categories.");
         Fragment fragmentCategories = new FragmentCategories();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.content_frame, fragmentCategories, FragmentCategories.TAG);
+        fragmentTransaction.add(R.id.main_content_frame, fragmentCategories, FragmentCategories.TAG);
         fragmentTransaction.addToBackStack(FragmentCategories.TAG);
         fragmentTransaction.commit();
     }
@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         if (mCurrentLocation != null) {
             String latt = (String.valueOf(mCurrentLocation.getLatitude()));
             String longtd = (String.valueOf(mCurrentLocation.getLongitude()));
+            Log.d(TAG, "lattlong : " + mCurrentLocation.toString());
         }
     }
 

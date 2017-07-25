@@ -1,6 +1,8 @@
 package com.ntatma.tatua;
 
 
+import android.os.Bundle;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 
@@ -10,4 +12,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 public class FragmentProviders extends SupportMapFragment{
     private GoogleMap googleMap;
+
+    @Override
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+
+    }
 }

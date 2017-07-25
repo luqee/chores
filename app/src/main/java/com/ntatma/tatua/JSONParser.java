@@ -7,8 +7,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +46,8 @@ public class JSONParser {
             HttpPost httpPost = new HttpPost(url);
             if (params != null){
                 httpPost.setEntity(new UrlEncodedFormEntity(params));
-                Log.d(TAG, "Inside JSONParser::getJSONFromUrl() setting formparams");
+                Log.d(TAG, "Inside JSONParser::getJSONFromUrl() setting params::"+ params);
+                Log.d(TAG, "HttpPost is ::"+ httpPost.toString());
             }
             HttpResponse response = client.execute(httpPost);
             Log.d(TAG, "Inside JSONParser::getJSONFromUrl() after executing htttp past");
@@ -85,16 +88,16 @@ public class JSONParser {
         return jsonObject;
     }
 
-    public JSONArray getJSONArray(String url, List<NameValuePair> params){
+    public JSONObject getJSONArray(String url, List<NameValuePair> params){
         try {
             // defaultHttpClient
             DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(url);
+            HttpGet httpGet = new HttpGet(url);
             if (params != null){
-                httpPost.setEntity(new UrlEncodedFormEntity(params));
+                httpGet.setParams((HttpParams) params);
                 Log.d(TAG, "Inside JSONParser::getJSONArray() setting formparams");
             }
-            HttpResponse httpResponse = httpClient.execute(httpPost);
+            HttpResponse httpResponse = httpClient.execute(httpGet);
             HttpEntity httpEntity = httpResponse.getEntity();
             inputStream = httpEntity.getContent();
         } catch (UnsupportedEncodingException e) {
@@ -120,11 +123,10 @@ public class JSONParser {
         }
 
         try {
-            jsonArray = new JSONArray(json);
+            jsonObject = new JSONObject(json);
         } catch (JSONException e) {
-            Log.e("JSON Parser", "Error parsing data " + e.toString());
+            e.printStackTrace();
         }
-
-        return jsonArray;
+        return jsonObject;
     }
 }
