@@ -22,9 +22,22 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+                    GoogleApiClient.OnConnectionFailedListener, FragmentCategories.FragmentCategoriesListener{
 
     public static String TAG = "MainActivity";
     Utils utils;
@@ -140,6 +153,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         dialogFragment.show(getSupportFragmentManager(), "errordialog");
     }
 
+    @Override
+    public void onCategoryClick(String name) {
+        getProviders(name);
+    }
+
     /* A fragment to display an error dialog */
     public static class ErrorDialogFragment extends DialogFragment {
         public ErrorDialogFragment() { }
@@ -175,5 +193,50 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
             }
         }
+    }
+
+    public void getProviders(String catName){
+        new AsyncTask<String, Void, JSONObject>(){
+
+            @Override
+            protected JSONObject doInBackground(String... args) {
+                Log.d(TAG, "Preparing to get providers");
+                HashMap<String, String> params = new HashMap<>();
+                JSONParser parser = new JSONParser();
+                params.put("registered_as", args[0]);
+                JSONObject jsonObject = parser.makeHttpRequest(utils.getCurrentIPAddress() +"tatua/api/v1.0/providers/", "GET", params);
+                return jsonObject;
+            }
+
+            @Override
+            protected void onPostExecute(JSONObject jsonObject) {
+                List<LatLng> latLngList = new ArrayList<>();
+                LatLng latLng;
+                try {
+                    JSONArray providersArray = jsonObject.getJSONArray("providers");
+                    for (int i= 0 ; i<providersArray.length() ; i++){
+
+                        double latitude = providersArray.getJSONObject(i).getDouble("lat");
+                        double longitude = providersArray.getJSONObject(i).getDouble("long");
+                        latLng = new LatLng(latitude, longitude);
+                        latLngList.add(latLng);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d(TAG, "Successfully fetched providers.\n" );
+                getSupportFragmentManager().popBackStack();
+                Fragment fragmentProviders = new FragmentProviders();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("providers", (Serializable) latLngList);
+                bundle.putDouble("tstLat", mCurrentLocation.getLatitude());
+                bundle.putDouble("tstLong", mCurrentLocation.getLongitude());
+                fragmentProviders.setArguments(bundle);
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.add(R.id.main_content_frame, fragmentProviders, FragmentProviders.TAG);
+                fragmentTransaction.addToBackStack(FragmentProviders.TAG);
+                fragmentTransaction.commit();
+            }
+        }.execute(catName);
     }
 }

@@ -24,13 +24,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by luqi on 7/8/17.
  */
 
-public class FragmentCategories extends Fragment implements AdapterView.OnItemClickListener {
+public class FragmentCategories extends Fragment {
+
+    private FragmentCategoriesListener fragmentCategoriesListener;
 
     public static String TAG = "FragmentCategories";
 
@@ -40,11 +43,27 @@ public class FragmentCategories extends Fragment implements AdapterView.OnItemCl
     CategoriesAdapter adapter;
     RecyclerView recyclerView;
 
+    public interface FragmentCategoriesListener {
+        void onCategoryClick(String name);
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity().getApplicationContext();
         utils = new Utils(mContext);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        fragmentCategoriesListener = (FragmentCategoriesListener) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        fragmentCategoriesListener = null;
     }
 
     @Override
@@ -62,17 +81,11 @@ public class FragmentCategories extends Fragment implements AdapterView.OnItemCl
             @Override
             public void onCategoryClicked(String name) {
                 Log.d(TAG, "Item : " + name + " clicked");
+                fragmentCategoriesListener.onCategoryClick(name);
             }
         });
-//        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, categories);
         recyclerView.setAdapter(adapter);
-//        getListView().setOnItemClickListener(this);
         getCategories();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
     }
 
     public void getCategories(){
@@ -80,16 +93,11 @@ public class FragmentCategories extends Fragment implements AdapterView.OnItemCl
         new AsyncTask<Void, Void, JSONObject>(){
 
             @Override
-            protected JSONObject doInBackground(Void... params) {
+            protected JSONObject doInBackground(Void... args) {
+                HashMap<String, String> params = new HashMap<>();
                 Log.d(TAG, "Fetching Categories to display");
-                List<NameValuePair> nameValuePairs;
                 JSONParser parser = new JSONParser();
-                nameValuePairs = new ArrayList<NameValuePair>();
-                nameValuePairs.add(new BasicNameValuePair("name", utils.getFromPreferences(Utils.USER_NAME)));
-                nameValuePairs.add(new BasicNameValuePair("number", utils.getFromPreferences(Utils.USER_NUMBER)));
-                nameValuePairs.add(new BasicNameValuePair("registered_as", utils.getFromPreferences(Utils.LOGED_IN_AS)));
-                Log.d(TAG, "create namevalue pairs");
-                JSONObject jsonObject = parser.getJSONArray(utils.getCurrentIPAddress() +"tatua/api/v1.0/categories",null);
+                JSONObject jsonObject = parser.makeHttpRequest(utils.getCurrentIPAddress() +"tatua/api/v1.0/categories","GET", params);
                 return jsonObject;
             }
 
@@ -118,4 +126,6 @@ public class FragmentCategories extends Fragment implements AdapterView.OnItemCl
             }
         }.execute(null, null, null);
     }
+
+
 }

@@ -26,6 +26,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -159,14 +160,13 @@ public class SplashActivity  extends AppCompatActivity
             @Override
             protected JSONObject doInBackground(Void... params) {
                 Log.d(TAG, "Starting registration");
-                List<NameValuePair> nameValuePairs;
+                HashMap<String, String> nameValuePairs = new HashMap<>();
                 JSONParser parser = new JSONParser();
-                nameValuePairs = new ArrayList<NameValuePair>();
-                nameValuePairs.add(new BasicNameValuePair("name", utils.getFromPreferences(Utils.USER_NAME)));
-                nameValuePairs.add(new BasicNameValuePair("number", utils.getFromPreferences(Utils.USER_NUMBER)));
-                nameValuePairs.add(new BasicNameValuePair("registered_as", utils.getFromPreferences(Utils.LOGED_IN_AS)));
+                nameValuePairs.put("name", utils.getFromPreferences(Utils.USER_NAME));
+                nameValuePairs.put("number", utils.getFromPreferences(Utils.USER_NUMBER));
+                nameValuePairs.put("registered_as", utils.getFromPreferences(Utils.LOGED_IN_AS));
                 Log.d(TAG, "create namevalue pairs");
-                JSONObject jsonObject = parser.getJSONFromUrl(utils.getCurrentIPAddress() +"tatua/api/v1.0/auth/register",nameValuePairs);
+                JSONObject jsonObject = parser.makeHttpRequest(utils.getCurrentIPAddress() +"tatua/api/v1.0/auth/register", "GET",nameValuePairs);
                 return jsonObject;
             }
 
