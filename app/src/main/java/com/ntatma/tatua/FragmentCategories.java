@@ -85,6 +85,7 @@ public class FragmentCategories extends Fragment {
             }
         });
         recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
         getCategories();
     }
 
@@ -118,7 +119,7 @@ public class FragmentCategories extends Fragment {
                         }
                         adapter.notifyDataSetChanged();
                     }else if (response.equals("error")){
-                        Log.d(TAG, "Error in registration");
+                        Log.d(TAG, "Error in gwetting categories");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

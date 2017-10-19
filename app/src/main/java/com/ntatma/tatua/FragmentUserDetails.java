@@ -30,8 +30,6 @@ public class FragmentUserDetails extends Fragment {
 
     EditText txtUserName;
     Button btnRegister;
-    RadioGroup radioOptionGroup;
-    RadioButton client, provider;
 
 
     @Override
@@ -61,31 +59,15 @@ public class FragmentUserDetails extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "In onCreateView method");
         super.onCreateView(inflater, container, savedInstanceState);
-        final View root = inflater.inflate(R.layout.fragment_userdetails, container, false);
+        View root = inflater.inflate(R.layout.fragment_userdetails, container, false);
         txtUserName = (EditText)root.findViewById(R.id.edit_username);
-        //radio group
-        radioOptionGroup = (RadioGroup) root.findViewById(R.id.radio_options) ;
-        radioOptionGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.radio_provider){
-                    mUtils.savePreferences(Utils.LOGED_IN_AS, "provider");
-                    btnRegister.setVisibility(View.VISIBLE);
-                }else if (checkedId == R.id.radio_client){
-                    mUtils.savePreferences(Utils.LOGED_IN_AS, "client");
-                    btnRegister.setVisibility(View.VISIBLE);
-                }else {
-                    mUtils.savePreferences(Utils.LOGED_IN_AS, "");
-                    btnRegister.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
         btnRegister = (Button)root.findViewById(R.id.btn_register);
         Log.d(TAG, "In onCreateView method >> setting up button listener");
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Button Register Clicked");
+                mUtils.savePreferences(Utils.USER_NAME, txtUserName.getText().toString());
                 fragmentUserDetailsListener.onBtnRegisterClicked(txtUserName.getText().toString());
             }
         });

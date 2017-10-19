@@ -17,19 +17,26 @@ public class Utils {
     static Context context;
     public static final String TAG = "Utils";
 
+    public static final String PROPERTY_REG_ID = "registration_id";
+    public static final String USER_LATITUDE = "UserLatitude";
+    public static final String USER_LONGITUDE = "UserLongitude";
+
     public static final String IS_USER_REGISTRED = "IsUserRegistered";
     public static final String IS_NUM_VERIFIED = "IsNumberVerified";
-    public static final String LOGED_IN_AS = "LogedInAs";
     public static final String USER_NAME = "UserName";
     public static final String USER_NUMBER = "UserNumber";
+    public static final String USER_ID = "UserId";
+    public static final String USER_STATUS = "UserStatus";
+    public static final String PROVIDER_NUMBER = "ProvNumber";
+    public static final String PROVIDER_NAME = "ProvName";
+    public static final String TRANSACTION_ID = "transactId";
+
 
 
 
     public static final String NexmoAppId = "300e8d3c-d27a-47b6-8016-6870a0d79efc";
     public static final String NexmoSharedSecretKey = "dba21cce6cc2223";
 
-    public static final String PROPERTY_TOKEN_ID = "token_id";
-    public static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
 
 
