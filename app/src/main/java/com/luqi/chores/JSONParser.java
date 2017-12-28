@@ -1,4 +1,4 @@
-package com.ntatma.tatua;
+package com.luqi.chores;
 //
 //import android.util.Log;
 //
@@ -259,6 +259,8 @@ public class JSONParser {
             jObj = new JSONObject(result.toString());
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
+        }catch (NullPointerException ex){
+            Log.e("JSON Parser", "Caught null pointer exception " + ex.toString());
         }
 
         // return JSON Object

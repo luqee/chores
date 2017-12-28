@@ -1,4 +1,4 @@
-package com.ntatma.tatua;
+package com.luqi.chores;
 
 
 import android.content.Context;
@@ -89,6 +89,7 @@ public class FragmentProviders extends Fragment implements OnMapReadyCallback{
     }
 
     public void displayMap(){
+        Log.d(TAG, "In method displayMap");
         LatLng ll = new LatLng(Double.parseDouble(mUtils.getFromPreferences(Utils.USER_LATITUDE)), Double.parseDouble(mUtils.getFromPreferences(Utils.USER_LONGITUDE)));
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 15);
         mGoogleMap.moveCamera(update);

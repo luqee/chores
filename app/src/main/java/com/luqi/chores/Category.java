@@ -1,4 +1,4 @@
-package com.ntatma.tatua;
+package com.luqi.chores;
 
 /**
  * Created by luqi on 7/24/17.

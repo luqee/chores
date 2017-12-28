@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Tatua.iml" filepath="$PROJECT_DIR$/Tatua.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/chores.iml" filepath="$PROJECT_DIR$/chores.iml" />
     </modules>
   </component>
 </project>

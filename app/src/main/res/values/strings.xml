@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Tatua</string>
+    <string name="app_name">Chores</string>
     <string name="register_button_text">Register</string>
     <string name="label_options">Register to application as?</string>
     <string name="radio_client">Client</string>

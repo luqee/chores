@@ -1,4 +1,4 @@
-package com.ntatma.tatua;
+package com.luqi.chores;
 
 import android.*;
 import android.Manifest;
@@ -36,8 +36,6 @@ import com.nexmo.sdk.verify.event.UserObject;
 import com.nexmo.sdk.verify.event.VerifyClientListener;
 import com.nexmo.sdk.verify.event.VerifyError;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,7 +70,7 @@ public class SplashActivity  extends AppCompatActivity
     private static final String LAST_UPDATED_TIME_STRING_KEY = "last_update_time";
 
     Location mCurrentLocation;
-    Boolean mRequestingLocationUpdates;
+    Boolean mRequestingLocationUpdates = Boolean.TRUE;
     String mLastUpdateTime;
 
     GoogleApiClient googleApiClient;
@@ -88,7 +86,9 @@ public class SplashActivity  extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d(TAG, "On start" );
         if (!mResolvingError) {
+            Log.d(TAG, "On start calling googleApiClient.connect()" );
             googleApiClient.connect();
         }
     }
@@ -166,6 +166,7 @@ public class SplashActivity  extends AppCompatActivity
             Fragment userDetailsFragment = new FragmentUserDetails();
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.content_frame, userDetailsFragment, FragmentUserDetails.TAG)
+                    .addToBackStack(FragmentUserDetails.TAG)
                     .commit();
         }else {
             Fragment fragmentCategories = new FragmentCategories();
@@ -176,6 +177,7 @@ public class SplashActivity  extends AppCompatActivity
         }
     }
     private synchronized void buildGoogleApiClient() {
+        Log.d(TAG, "building google api client");
         googleApiClient = new GoogleApiClient.Builder(mContext)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -329,6 +331,7 @@ public class SplashActivity  extends AppCompatActivity
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        Log.d(TAG, "Google api client on connected" );
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -352,6 +355,7 @@ public class SplashActivity  extends AppCompatActivity
     }
 
     protected LocationRequest createLocationRequest() {
+        Log.d(TAG, "Creating location request" );
         LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(10000);
         mLocationRequest.setFastestInterval(5000);
@@ -360,6 +364,7 @@ public class SplashActivity  extends AppCompatActivity
     }
 
     protected void startLocationUpdates() {
+        Log.d(TAG, "Starting location updates" );
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -381,6 +386,7 @@ public class SplashActivity  extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(TAG, "Google api client on connection failed" );
         if (mResolvingError) {
             // Already attempting to resolve an error.
             return;
@@ -412,6 +418,7 @@ public class SplashActivity  extends AppCompatActivity
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d(TAG, "Location changed" );
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         utils.savePreferences(Utils.USER_LATITUDE, String.valueOf(location.getLatitude()));
@@ -488,10 +495,10 @@ public class SplashActivity  extends AppCompatActivity
             protected void onPostExecute(JSONObject jsonObject) {
                 super.onPostExecute(jsonObject);
                 //// TODO: 8/25/17 show engaged to 'provider' page
-                Log.d(TAG, "After requesting prov: result is :: "+jsonObject.toString());
+
                 try {
                     String response = jsonObject.getString("message");
-
+                    Log.d(TAG, "After requesting prov: result is :: "+response);
                     if (response.equals("success")){
                         JSONObject userJSON = jsonObject.getJSONObject("activated_user");
                         utils.savePreferences(Utils.PROVIDER_NAME, userJSON.getString("provider_name"));

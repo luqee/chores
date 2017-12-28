@@ -1,4 +1,4 @@
-package com.ntatma.tatua;
+package com.luqi.chores;
 
 import android.app.Activity;
 import android.content.Context;
@@ -108,7 +108,7 @@ public class Utils {
     }
 
     public String getCurrentIPAddress() {
-        return "http://flask-tatua-api.herokuapp.com/";
+        return "https://chores-api.herokuapp.com/";
     }
 
     public void showToast(final String txt) {

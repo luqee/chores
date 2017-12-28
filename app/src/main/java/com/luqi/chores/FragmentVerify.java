@@ -1,25 +1,15 @@
-package com.ntatma.tatua;
+package com.luqi.chores;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-
-import com.nexmo.sdk.NexmoClient;
-import com.nexmo.sdk.core.client.ClientBuilderException;
-import com.nexmo.sdk.verify.client.VerifyClient;
-import com.nexmo.sdk.verify.event.UserObject;
-import com.nexmo.sdk.verify.event.VerifyClientListener;
-import com.nexmo.sdk.verify.event.VerifyError;
-
-import java.io.IOException;
 
 
 public class FragmentVerify extends Fragment {
